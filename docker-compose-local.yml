@@ -1,0 +1,33 @@
+# Docker Compose with Nginx Load Balancer - Using Pre-built Local Image
+# Run with: podman compose up -d --scale api=3
+
+services:
+  # Nginx Load Balancer
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-lb
+    ports:
+      - "8080:80"
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # .NET API - uses pre-built local image
+  api:
+    image: localhost/dotnetawsapi:latest
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_ENVIRONMENT=Production
+    expose:
+      - "8080"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

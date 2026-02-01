@@ -1,0 +1,6 @@
+# Simple Dockerfile - uses pre-published output (no SDK needed)
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+WORKDIR /app
+EXPOSE 8080
+COPY bin/Release/net9.0/publish/ .
+ENTRYPOINT ["dotnet", "dotnetAwsAPI.dll"]
