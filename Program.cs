@@ -33,6 +33,12 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+app.MapGet("/whoami", () =>
+{
+    var host = Environment.GetEnvironmentVariable("HOSTNAME") ?? "unknown";
+    return Results.Ok(new { host });
+});
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
